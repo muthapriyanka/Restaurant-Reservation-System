@@ -1,0 +1,12 @@
+2025-05-10 21:23:03,724 - INFO - Starting migration process
+2025-05-10 21:23:03,731 - DEBUG - Database URL: mysql+pymysql://root:Mydb%40123@127.0.0.1:3306/booktable
+2025-05-10 21:23:03,744 - INFO - Database connection successful
+2025-05-10 21:23:03,748 - INFO - Existing columns found: {'booked_slots', 'availability'}
+2025-05-10 21:23:03,749 - INFO - Updated 0 rows with empty arrays
+2025-05-10 21:23:03,749 - INFO - Migration completed successfully!
+2025-05-10 21:26:34,628 - INFO - Starting migration process
+2025-05-10 21:26:34,635 - DEBUG - Database URL: mysql+pymysql://root:Mydb%40123@127.0.0.1:3306/booktable
+2025-05-10 21:26:34,640 - INFO - Database connection successful
+2025-05-10 21:26:34,642 - INFO - Existing columns found: {'booked_slots', 'availability'}
+2025-05-10 21:26:34,642 - INFO - Updated 0 rows with empty arrays
+2025-05-10 21:26:34,642 - INFO - Migration completed successfully!

@@ -1,0 +1,108 @@
+/* RestaurantDetails.css */
+
+/* Container background */
+.read-reviews-bg {
+    /* Random cozy interior from Picsum */
+    background: url("https://picsum.photos/id/1067/1600/900") center/cover no-repeat;
+    padding: 2rem 0;
+  }
+  
+  /* Center & constrain content */
+  .read-reviews-container {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 0 1rem;
+  }
+  
+  /* Card styling */
+  .review-card {
+    background: rgba(255, 255, 255, 0.95);
+    color: #333;
+    padding: 1.25rem;
+    margin-bottom: 1.5rem;
+    border-radius: 8px;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+  }
+  .card-title {
+    margin-bottom: 0.75rem;
+    color: #222;
+  }
+  
+  /* Description */
+  .description {
+    white-space: pre-wrap;
+    word-break: break-word;
+    line-height: 1.5;
+    color: #444;
+  }
+  
+  /* Photos grid */
+  .photos-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+  }
+  .restaurant-photo {
+    max-width: 120px;
+    border-radius: 4px;
+    object-fit: cover;
+  }
+  
+  /* Operating hours list */
+  .hours-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+  .hours-list li {
+    margin-bottom: 0.25rem;
+  }
+  
+  /* Slots badges (horizontal scroll) */
+  .slots-badges {
+    display: flex;
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    gap: 0.5rem;
+    padding-bottom: 0.25rem;
+  }
+  .slots-badges::-webkit-scrollbar {
+    height: 5px;
+  }
+  .slots-badges::-webkit-scrollbar-thumb {
+    background: rgba(0,0,0,0.2);
+    border-radius: 2px;
+  }
+  .slot-badge {
+    flex: 0 0 auto;
+    background: #e0e0e0;
+    color: #333;
+    padding: 0.3rem 0.6rem;
+    border-radius: 999px;
+    font-size: 0.85rem;
+    white-space: nowrap;
+  }
+  
+  /* Read reviews link */
+  .review-link {
+    display: inline-block;
+    color: #1a73e8;
+    font-weight: 500;
+    text-decoration: none;
+  }
+  .review-link:hover {
+    text-decoration: underline;
+  }
+  
+  /* Loading & error */
+  .loading,
+  .error {
+    text-align: center;
+    color: #fff;
+    padding: 2rem;
+    font-size: 1.2rem;
+  }
+  .error {
+    color: #f55;
+  }
+  

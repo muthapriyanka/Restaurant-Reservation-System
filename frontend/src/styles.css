@@ -1,0 +1,1064 @@
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background: linear-gradient(to right, #f8fafc, #e2e8f0);
+    min-height: 100vh;
+  }
+  
+  .form-container, .list-container {
+    max-width: 600px;
+    margin: 50px auto;
+    padding: 20px;
+    padding-right:45px;
+    background-color: white;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    border-radius: 12px;
+    
+  }
+  
+  .form-container h2, .list-container h2 {
+    text-align: center;
+    margin-bottom: 20px;
+    color: #1f2937;
+  }
+  
+  input {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 15px;
+    border: 1px solid #cbd5e0;
+    border-radius: 6px;
+    font-size: 16px;
+  }
+  
+  button {
+    width: 100%;
+    padding: 10px;
+    background-color: #4f46e5;
+    color: white;
+    font-weight: bold;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 16px;
+  }
+  
+  button:hover {
+    background-color: #4338ca;
+  }
+  
+  .restaurant-card {
+    background: rgba(255, 255, 255, 0.1);     /* translucent white */
+    backdrop-filter: blur(8px);  
+    border: 1px solid #e2e8f0;
+    padding: 15px;
+    border-radius: 8px;
+    margin-bottom: 15px;
+   
+  }
+  
+  .inputCreateRestaurant {
+    width: 100%;
+  }
+
+  .error-text {
+    color: red;
+    font-size: 0.85rem;
+    margin-top: -10px;
+    margin-bottom: 20px;
+  }
+
+  .addNewRestaurantBtn {
+    width: 20%;
+  }
+
+  .textCenter {
+    text-align: center;
+    color: white;
+  }
+/* Container Styling */
+.list-container {
+  max-width: 1200px;
+  margin: auto;
+  padding: 40px 20px;
+  font-family: 'Segoe UI', sans-serif;
+  background-color: #f7f9fc;
+}
+
+/* Title */
+.page-title {
+  text-align: center;
+  font-size: 2rem;
+  margin-bottom: 30px;
+  color: #333;
+}
+
+/* Card Grid */
+.card-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(290px, 1fr));
+  gap: 24px;
+}
+
+/* Restaurant Card */
+.restaurant-card {
+  background: white;
+  border-radius: 16px;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.06);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.restaurant-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.12);
+}
+
+/* Typography */
+.restaurant-name {
+  margin: 0;
+  font-size: 1.3rem;
+  color: #222;
+}
+
+.description {
+  font-size: 0.95rem;
+  margin: 8px 0;
+  color: #555;
+}
+
+.location {
+  font-weight: 500;
+  font-size: 0.9rem;
+  color: #666;
+}
+
+.contact {
+  font-size: 0.85rem;
+  color: #888;
+  margin-bottom: 12px;
+}
+
+/* Update Button */
+.update-button {
+  margin-top: auto;
+  align-self: flex-start;
+  padding: 8px 16px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.update-button:hover {
+  background-color: #0056b3;
+}
+
+  .update-button {
+    margin-top: auto; /* Pushes the button to the bottom */
+    padding: 8px 12px;
+    background-color: #007bff;
+    border: none;
+    border-radius: 6px;
+    color: white;
+    cursor: pointer;
+    font-size: 14px;
+  }
+  
+  .update-button:hover {
+    background-color: #0056b3;
+  }
+  
+  .update-restaurant-bg {
+    background-image: url('https://images.pexels.com/photos/262047/pexels-photo-262047.jpeg?auto=compress&cs=tinysrgb&w=1600');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    min-height: 100vh;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 40px 20px;
+  }
+  
+
+  .paddingBottom5 {
+    padding-bottom: 5%;
+  }
+  
+  .remove-button {
+    margin-top: auto;
+    align-self: flex-start;
+    padding: 8px 16px;
+    background-color: #dc3545;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-size: 0.9rem;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+  }
+  
+  .remove-button:hover {
+    background-color: #c82333;
+  }
+
+  .admin-analytics {
+    max-width: 1100px;
+    margin: 40px auto;
+    padding: 20px;
+    background: #ffffff;
+    border-radius: 12px;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
+  }
+  
+  .analytics-bg {
+    background-image: url('https://images.pexels.com/photos/262047/pexels-photo-262047.jpeg?auto=compress&cs=tinysrgb&w=1600');
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed;
+    background-repeat: no-repeat;
+    min-height: 100vh;
+    width: 100%;
+    padding: 60px 20px;
+  }
+  
+  .admin-analytics {
+    max-width: 1100px;
+    margin: 40px auto;
+    padding: 20px;
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    border-radius: 12px;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+  
+    /* Glassmorphism effect */
+    background-color: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+  
+    /* Ensure text is readable */
+    color: white;
+  }
+  
+  .analytics-title {
+    text-align: center;
+    margin-bottom: 30px;
+    color: #333;
+  }
+  
+  .analytics-cards {
+    display: flex;
+    gap: 20px;
+    justify-content: center;
+    margin-bottom: 40px;
+    flex-wrap: wrap;
+  }
+  
+  .stat-card {
+    background: #f1f5fb;
+    border-radius: 10px;
+    padding: 20px 30px;
+    text-align: center;
+    flex: 1;
+    min-width: 150px;
+    max-width: 250px;
+  }
+  
+  .stat-card h3 {
+    margin: 0;
+    font-size: 2rem;
+    color: #007bff;
+  }
+  
+  .stat-card p {
+    margin-top: 8px;
+    font-weight: 500;
+    color: #444;
+  }
+  
+  .chart-container {
+    margin-top: 40px;
+  }
+  
+  .add-restaurant-bg {
+    background-image: url('https://images.pexels.com/photos/6267/menu-restaurant-vintage-table.jpg?auto=compress&cs=tinysrgb&w=1600');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    min-height: 100vh;
+    width: 100%;
+    position: relative;
+  }
+
+
+  .add-restaurant-overlay {
+    position: relative;
+    background-color: rgba(0, 0, 0, 0.6); /* dark overlay */
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 40px 20px;
+  }
+
+  .add-restaurant-container {
+    max-width: 600px;                 /* ✅ full width like before */
+  width: 100%;
+  margin: 50px auto;                /* ✅ center the form */
+  padding: 30px;
+  background: rgba(255, 255, 255, 0.1); /* ✅ transparent background */
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border-radius: 12px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3); /* stronger for visibility */
+  color: white;
+  }
+  
+  .add-restaurant-container h2 {
+    text-align: center;
+    margin-bottom: 25px;
+    color: white;
+  }
+  
+  .restaurant-form {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    padding-right: 20px;
+  }
+  
+  .restaurant-form input,
+  .restaurant-form textarea {
+    padding: 12px;
+    border-radius: 8px;
+    border: 1px solid #ccc;
+    font-size: 1rem;
+    resize: vertical;
+  }
+  
+  .restaurant-form textarea {
+    height: 100px;
+  }
+  
+  .submit-button {
+    background-color: #007bff;
+    color: white;
+    padding: 12px;
+    border: none;
+    border-radius: 8px;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+  }
+  
+  .submit-button:hover {
+    background-color: #0056b3;
+  }
+
+  .selectDescription {
+    width: 100%;
+    padding: 12px;
+    margin: 12px 0;
+    border: 1px solid #cbd5e0;
+    border-radius: 6px;
+    font-size: 16px;
+    box-sizing: border-box;
+  }
+  
+  .welcome-bg {
+    background-image: url('https://images.pexels.com/photos/262978/pexels-photo-262978.jpeg?auto=compress&cs=tinysrgb&w=1600');
+    background-size: cover;
+    background-position: center;
+    height: 100vh;
+    width: 100%;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  .welcome-overlay {
+    background-color: rgba(0, 0, 0, 0.6); /* dark overlay */
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  .welcome-content {
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
+    border-radius: 16px;
+    padding: 40px;
+    max-width: 600px;
+    width: 90%;
+    text-align: center;
+    color: white;
+  }
+  
+  .welcome-heading {
+    font-size: 3rem;
+    margin-bottom: 20px;
+  }
+  
+  .welcome-description {
+    font-size: 1.2rem;
+    margin-bottom: 30px;
+  }
+  
+  .welcome-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    flex-wrap: wrap;
+  }
+  
+  .btn {
+    padding: 12px 28px;
+    border-radius: 8px;
+    font-size: 1rem;
+    border: none;
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+  
+  .login-btn {
+    background-color: #3498db;
+    color: white;
+  }
+  
+  .login-btn:hover {
+    background-color: #2980b9;
+  }
+  
+  .register-btn {
+    background-color: #2ecc71;
+    color: white;
+  }
+  
+  .register-btn:hover {
+    background-color: #27ae60;
+  }
+
+  .login-bg {
+    background-image: url('https://images.pexels.com/photos/2619967/pexels-photo-2619967.jpeg?auto=compress&cs=tinysrgb&w=1600');
+    background-size: cover;
+    background-position: center;
+    height: 100vh;
+    width: 100%;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  .login-overlay {
+    position: absolute;
+    inset: 0;
+    background-color: rgba(0, 0, 0, 0.6);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  .glass-box {
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(12px);
+    border-radius: 16px;
+    padding: 40px 30px;
+    width: 80%;
+    max-width: 400px;
+    color: white;
+    box-shadow: 0 0 15px rgba(0,0,0,0.3);
+  }
+  
+  
+  .auth-container h2 {
+    text-align: center;
+    margin-bottom: 24px;
+  }
+  
+  .inputCreateRestaurant {
+    width: 95%;
+    padding: 12px;
+    margin: 10px 0;
+    border-radius: 8px;
+    border: none;
+  }
+  
+  
+  button[type="submit"] {
+    width: 100%;
+    padding: 12px;
+    margin-top: 10px;
+    border: none;
+    background-color: #3498db;
+    color: white;
+    font-weight: bold;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background 0.2s ease;
+  }
+  
+  button[type="submit"]:hover {
+    background-color: #2980b9;
+  }
+  
+  .error-text {
+    color: #ff6b6b;
+    font-size: 0.9rem;
+    margin-top: -6px;
+    margin-bottom: 10px;
+  }
+
+  .register-bg {
+    background-image: url('https://images.pexels.com/photos/2696064/pexels-photo-2696064.jpeg?auto=compress&cs=tinysrgb&w=1600');
+    background-size: cover;
+    background-position: center;
+    height: 100vh;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  
+  .register-overlay {
+    position: absolute;
+    inset: 0;
+    background-color: rgba(0, 0, 0, 0.6);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  
+  .glass-box {
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(12px);
+    border-radius: 16px;
+    padding: 40px;
+    width: 90%;
+    max-width: 400px;
+    color: white;
+    box-shadow: 0 0 15px rgba(0,0,0,0.3);
+  }
+  
+  .inputCreateRestaurant {
+    width: 95%;
+    padding: 12px;
+    margin: 10px 0;
+    border-radius: 8px;
+    border: none;
+  }
+  
+  button[type="submit"] {
+    width: 100%;
+    padding: 12px;
+    margin-top: 10px;
+    border: none;
+    background-color: #2ecc71;
+    color: white;
+    font-weight: bold;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background 0.2s ease;
+  }
+  
+  button[type="submit"]:hover {
+    background-color: #27ae60;
+  }
+  
+  .error-text {
+    color: #ff6b6b;
+    font-size: 0.9rem;
+    margin-top: -6px;
+    margin-bottom: 10px;
+  }
+  
+  .customer-search-container {
+    /* max-width: 800px;
+    margin: 40px auto;
+    padding: 20px;
+    font-family: Arial, sans-serif; */
+    /* max-width: 1200px;
+    margin: 40px auto;
+    padding: 20px;
+    background-color: #f5f7fa;
+    border-radius: 12px; */
+   
+    max-width: 1200px;
+  margin: auto;
+  padding: 20px;
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border-radius: 16px;
+  color: white;
+  margin-top: 20px;
+  }
+  
+  .customer-bg {
+    background-image: url('https://images.pexels.com/photos/262918/pexels-photo-262918.jpeg?auto=compress&cs=tinysrgb&w=1600');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    min-height: 100vh;
+    width: 100%;
+    padding: 40px 20px;
+  }
+  
+
+  .filters {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-bottom: 30px;
+  }
+  
+  .filters input,
+  .filters button {
+    padding: 10px;
+    font-size: 1rem;
+    border-radius: 8px;
+    border: 1px solid #ccc;
+    flex: 1 1 150px;
+  }
+  
+  .filters button {
+    background-color: #007bff;
+    color: white;
+    border: none;
+    flex: 1 1 auto;
+    cursor: pointer;
+  }
+  
+  .filters button:hover {
+    background-color: #0056b3;
+  }
+  
+  .results {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 20px;
+  }
+  
+  .result-card {
+    background: #ffffff;
+    padding: 20px;
+    border-radius: 12px;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.06);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+  }
+  
+  .result-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.1);
+  }
+  
+  .result-card h3 {
+    margin-top: 0;
+    margin-bottom: 10px;
+    font-size: 1.25rem;
+    color: #333;
+  }
+  
+  .result-card p {
+    margin: 6px 0;
+    color: #555;
+    font-size: 0.95rem;
+  }
+  
+  .slots {
+    margin-top: 12px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+  
+  .slot-btn {
+    padding: 6px 12px;
+    background-color: #28a745;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 0.9rem;
+  }
+  
+  .slot-btn:hover {
+    background-color: #218838;
+  }
+  
+  .filtersSelect {
+    height: 43px;
+    padding: 10px;
+    font-size: 1rem;
+    border-radius: 8px;
+    border: 1px solid #ccc;
+    flex: 1 1 150px;
+  }
+  
+  .special-request-textarea {
+    width: 100%;
+    padding: 12px;
+    font-size: 1rem;
+    border-radius: 8px;
+    border: 1px solid #ccc;
+    resize: vertical;
+    margin-bottom: 20px;
+    box-sizing: border-box;
+  }
+  
+
+  .book-bg {
+    background-image: url('https://images.pexels.com/photos/262918/pexels-photo-262918.jpeg?auto=compress&cs=tinysrgb&w=1600');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    min-height: 100vh;
+    padding: 40px 20px;
+  }
+  
+
+  .booking-container {
+    max-width: 700px;
+    margin: 40px auto;
+    padding: 30px;
+    background-color: #ffffff;
+    border-radius: 16px;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+    font-family: 'Segoe UI', sans-serif;
+  }
+  
+  .booking-container h2 {
+    font-size: 2rem;
+    margin-bottom: 20px;
+    color: #2c3e50;
+  }
+  
+  .booking-container p {
+    font-size: 1rem;
+    margin: 8px 0;
+    color: #555;
+  }
+  
+  .booking-container strong {
+    color: #333;
+  }
+  
+  .booking-container h4 {
+    margin-top: 25px;
+    margin-bottom: 10px;
+    font-size: 1.1rem;
+    color: #007bff;
+  }
+  
+  .booking-container a {
+    color: #007bff;
+    text-decoration: none;
+    font-weight: 500;
+  }
+  
+  .booking-container a:hover {
+    text-decoration: underline;
+  }
+  
+  .booking-container button {
+    display: inline-block;
+    padding: 10px 20px;
+    margin-right: 12px;
+    margin-top: 20px;
+    font-size: 1rem;
+    border-radius: 8px;
+    border: none;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+  }
+  
+  .booking-container button:first-of-type {
+    background-color: #28a745;
+    color: white;
+  }
+  
+  .booking-container button:first-of-type:hover {
+    background-color: #218838;
+  }
+  
+  .booking-container button:last-of-type {
+    background-color: #dc3545;
+    color: white;
+  }
+  
+  .booking-container button:last-of-type:hover {
+    background-color: #c82333;
+  }
+  
+  .admin-dashboard-bg {
+    background-image: url('https://images.pexels.com/photos/262978/pexels-photo-262978.jpeg?auto=compress&cs=tinysrgb&w=1600');
+    background-size: cover;
+    background-position: center;
+    min-height: 100vh;
+    width: 100%;
+    position: relative;
+  }
+  
+.admin-dashboard-overlay {
+  position: relative;
+  inset: 0; /* shortcut for top: 0; right: 0; bottom: 0; left: 0; */
+  background-color: rgba(0, 0, 0, 0.6); /* dark overlay */
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  padding-top: 40px;
+}
+
+.admin-dashboard-content {
+  background: rgba(255, 255, 255, 0.15);
+  backdrop-filter: blur(10px);
+  padding: 30px;
+  width: 90%;
+  max-width: 1200px;
+  border-radius: 16px;
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.3);
+  color: white;
+}
+.manager-dashboard-bg {
+  background-image: url('https://images.pexels.com/photos/262978/pexels-photo-262978.jpeg?auto=compress&cs=tinysrgb&w=1600'); /* Replace with your desired image URL */
+  background-size: cover; /* Ensure the image covers the entire viewport */
+  background-position: center; /* Center the image */
+  background-attachment: fixed; /* Keep the background fixed when scrolling */
+  background-repeat: no-repeat; /* Prevent the image from repeating */
+  height: 100%; /* Full page height */
+  width: 100%; /* Full page width */
+  position: relative;
+  background-color: rgba(0, 0, 0, 0.6); /* Dark overlay for better text visibility */
+
+    min-height: 100vh;
+    padding: 50px 20px;
+    justify-content: center;
+    align-items: flex-start;
+}
+
+.dashboard-content {
+  position: relative;
+  z-index: 1; /* Ensure the content is above the background */
+  padding: 20px; /* Optional: Add padding around your content */
+}
+.review-modal {
+  margin-top: 20px;
+  padding: 20px;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 12px;
+  backdrop-filter: blur(10px);
+  color: white;
+  box-shadow: 0 0 15px rgba(0, 0, 0, 0.3);
+}
+
+.special-request-textarea {
+  padding: 10px;
+  font-size: 1rem;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+  resize: vertical;
+  box-sizing: border-box;
+}
+.customer-bookings {
+  background-image: url('https://images.pexels.com/photos/262918/pexels-photo-262918.jpeg?auto=compress&cs=tinysrgb&w=1600');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+  min-height: 100vh;
+
+  /* Overlay effect */
+  padding: 40px 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+
+.customer-bookings .result-card {
+  background: white;
+  backdrop-filter: blur(6px);
+  border-radius: 12px;
+  padding: 20px;
+  margin-bottom: 20px;
+  color: white;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
+  transition: transform 0.2s ease;
+}
+
+.customer-bookings .result-card:hover {
+  transform: translateY(-4px);
+}
+
+.customer-bookings .review-modal {
+  background: white;
+  backdrop-filter: blur(10px);
+  border-radius: 12px;
+  padding: 20px;
+  margin-top: 30px;
+  color: black;
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.3);
+}
+
+.customer-bookings .special-request-textarea {
+  width: 100%;
+  padding: 12px;
+  font-size: 1rem;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+  background-color: rgba(255, 255, 255, 0.15);
+  resize: vertical;
+  margin: 10px 0 15px;
+}
+
+.customer-bookings button {
+  padding: 10px 16px;
+  font-size: 1rem;
+  font-weight: 500;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  margin-top: 10px;
+}
+
+.customer-bookings button:hover {
+  opacity: 0.9;
+}
+
+.customer-bookings .submit-review-btn {
+  background-color: #28a745;
+  color: white;
+}
+
+.customer-bookings .cancel-review-btn {
+  background-color: #dc3545;
+  color: white;
+}
+
+.customer-bookings select {
+  padding: 6px 10px;
+  font-size: 1rem;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+  background-color: rgba(255, 255, 255, 0.15);
+  color: white;
+}
+.customer-bookings-content {
+  max-width: 1000px;
+  width: 100%;
+  background: rgba(255, 255, 255, 0.08);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border-radius: 16px;
+  padding: 30px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+  color: white;
+}
+.review-rating-select {
+  color: black;
+  background-color: white;
+  padding: 6px 10px;
+  font-size: 1rem;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+  margin-top: 8px;
+}
+.logout-fixed-wrapper {
+  position: fixed;
+  top: 12px;
+  right: 12px;
+  z-index: 1000;
+}
+
+.logout-fixed-btn {
+  padding: 10px 20px;
+  font-size: 0.95rem;
+  background-color: #dc3545;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+  transition: background-color 0.2s ease;
+  width: auto;              /* ✅ ensures it doesn't stretch */
+  display: inline-block;    /* ✅ keeps it inline, not block-level */
+}
+
+
+.read-reviews-bg {
+  position: relative;
+  background-image: url('https://images.pexels.com/photos/6267/menu-restaurant-vintage-table.jpg?auto=compress&cs=tinysrgb&w=1600');
+  background-size: cover;
+  background-position: center;
+  min-height: 100vh;
+  padding: 50px 20px;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+}
+
+.read-reviews-bg::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-color: rgba(0, 0, 0, 0.6);
+  z-index: 1;
+}
+
+.read-reviews-container {
+  position: relative;
+  z-index: 2;
+  max-width: 900px;
+  width: 100%;
+  background: rgba(0, 0, 0, 0.75);
+  border-radius: 12px;
+  padding: 30px;
+  color: #f0f0f0;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5);
+}
+
+/* Header style */
+.read-reviews-container h2 {
+  font-size: 2rem;
+  text-align: center;
+  margin-bottom: 24px;
+}
+
+.review-card {
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 8px;
+  padding: 20px;
+  margin-bottom: 20px;
+  transition: transform 0.2s ease;
+}
+.review-card:hover {
+  transform: translateY(-3px);
+}
+
+/* Text inside cards */
+.review-card p {
+  margin: 8px 0;
+  line-height: 1.4;
+}
+.review-card strong {
+  color: #ffd700; /* gold labels for rating/comment */
+}
+
+
