@@ -48,7 +48,7 @@ async def create_restaurant(
         zip_code=restaurant.zip_code,
         phone_number=restaurant.phone_number,
         email=restaurant.email,
-        cuisine_type=restaurant.cuisine_type,
+        cuisine_type=RestaurantModel.CuisineType(restaurant.cuisine_type.value),
         cost_rating=restaurant.cost_rating,
         availability=restaurant.availability,
         booked_slots=restaurant.booked_slots,
@@ -158,6 +158,11 @@ async def update_restaurant_details(
 
     # Update only provided fields
     update_data = restaurant_update.dict(exclude_unset=True)
+    if "cuisine_type" in update_data and update_data["cuisine_type"] is not None:
+        cuisine_type = update_data["cuisine_type"]
+        update_data["cuisine_type"] = RestaurantModel.CuisineType(
+            getattr(cuisine_type, "value", cuisine_type)
+        )
     for key, value in update_data.items():
         setattr(restaurant, key, value)
 

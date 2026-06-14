@@ -528,7 +528,10 @@ async def update_reservation_status(
         raise HTTPException(400, "Must supply exactly one field: status")
 
     # 5) Apply the status update
-    reservation.status = data["status"]
+    status_value = data["status"]
+    reservation.status = ReservationModel.ReservationStatus(
+        getattr(status_value, "value", status_value)
+    )
 
     db.commit()
     db.refresh(reservation)

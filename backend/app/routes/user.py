@@ -54,7 +54,7 @@ def register_user(user: UserSchema.UserCreate, db: Session = Depends(database.ge
         phone_number=user.phone_number,
         first_name=user.first_name,
         last_name=user.last_name,
-        role=user.role,
+        role=UserModel.UserRole(user.role.value),
     )
     db.add(new_user)
     db.commit()
