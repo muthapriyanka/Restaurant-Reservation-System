@@ -24,7 +24,7 @@ services:
     staticPublishPath: frontend/build
     envVars:
       - key: REACT_APP_API_BASE_URL
-        value: https://restaurant-reservation-api.onrender.com/api
+        value: https://restaurant-reservation-api-6djs.onrender.com/api
     routes:
       - type: rewrite
         source: /*
