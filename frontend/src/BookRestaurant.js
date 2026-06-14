@@ -35,7 +35,7 @@ const BookRestaurant = () => {
       }
     };
     fetchRestaurants();
-  }, []);
+  }, [id]);
   console.log("Restaurants data:", restaurants);
   const reviews_count = restaurants?.reviews?.length || 0;
   if (!restaurants) return <p>Restaurant not found.</p>;

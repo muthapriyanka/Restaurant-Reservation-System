@@ -15,7 +15,7 @@ class AuthMiddleware(BaseHTTPMiddleware):
         if request.url.path.startswith(("/docs", "/redocs", "/openapi.json")):
             return await call_next(request)
 
-        if request.url.path in ["/api/login", "/api/register"]:
+        if request.url.path in ["/api/login", "/api/register", "/health"]:
             return await call_next(request)
 
         if request.method == "OPTIONS":

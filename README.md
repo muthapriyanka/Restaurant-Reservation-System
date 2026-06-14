@@ -28,6 +28,25 @@ A multi-role (Customer, BusinessOwner, Admin) booking system built with:
   - Monitor usage analytics  
   - Manage users & listings  
 
+---
+
+## Deployment Notes
+
+This project was previously deployed on AWS using Terraform for development and demo purposes. The AWS resources are not currently running because keeping the cloud infrastructure active would incur ongoing cost.
+
+For a low-cost public demo, use the `render-postgres-deploy` branch. That branch includes a Render Blueprint (`render.yaml`) for:
+
+- FastAPI backend on Render Web Service
+- React frontend on Render Static Site
+- Render Postgres database
+
+Render's free Postgres option is useful for demos, but it has limits: one free database per workspace, 1 GB storage, no backups, and expiration after 30 days. If Render changes the generated service URLs, update these environment variables in the Render dashboard:
+
+- Backend: `CORS_ORIGINS`
+- Frontend: `REACT_APP_API_BASE_URL`
+
+The backend expects `DATABASE_URL` to point to a PostgreSQL database in this branch.
+
 
   <img width="1134" height="825" alt="Screenshot 2025-05-12 at 11 19 28 AM" src="https://github.com/user-attachments/assets/056de593-6fbf-414c-aca2-350f5c61bbe0" />
 
@@ -38,5 +57,4 @@ A multi-role (Customer, BusinessOwner, Admin) booking system built with:
   <img width="1457" height="854" alt="Screenshot 2025-05-12 at 11 47 53 AM" src="https://github.com/user-attachments/assets/bf379f0b-c3c2-4bad-a349-5964507743b2" />
 
   
-
 

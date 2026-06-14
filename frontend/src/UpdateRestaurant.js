@@ -33,7 +33,6 @@ const UpdateRestaurant = () => {
   const { id } = useParams();
   const navigate = useNavigate();
   const [restaurant, setRestaurant] = useState(null);
-  const [errors, setErrors] = useState({});
 
   useEffect(() => {
     const fetchData = async () => {
@@ -60,7 +59,6 @@ const UpdateRestaurant = () => {
     const newValue =
       name === "cost_rating" ? CostRatingEnum[value] ?? "" : value;
     setRestaurant((prev) => ({ ...prev, [name]: newValue }));
-    setErrors((prev) => ({ ...prev, [name]: undefined }));
   };
 
   const handleAvailabilityChange = (e) => {
@@ -74,11 +72,6 @@ const UpdateRestaurant = () => {
         i === idx ? { ...h, [field]: value } : h
       );
       return { ...prev, operating_hours: hrs };
-    });
-    setErrors((prev) => {
-      const copy = { ...prev };
-      delete copy[`operating_hours.${idx}.${field}`];
-      return copy;
     });
   };
 

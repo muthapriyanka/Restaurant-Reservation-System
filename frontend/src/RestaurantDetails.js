@@ -109,7 +109,7 @@ const RestaurantDetails = () => {
                   <img
                     key={i}
                     src={url}
-                    alt={`${name} photo ${i + 1}`}
+                    alt={`${name} ${i + 1}`}
                     className="restaurant-photo"
                   />
                 ))}

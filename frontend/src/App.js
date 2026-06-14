@@ -19,19 +19,9 @@ import RestaurantList from "./RestaurantList";
 import "./styles.css";
 import UpdateRestaurant from "./UpdateRestaurant";
 
-// Check if the user is authenticated and get their role from localStorage
-const isAuthenticated = () => {
-  return localStorage.getItem("role") !== null;
-};
-
-// Function to get the current user role
-const getRole = () => {
-  return localStorage.getItem("role");
-};
-
 function App() {
   return (
-    <Router>
+    <Router future={{ v7_relativeSplatPath: true, v7_startTransition: true }}>
       <Routes>
         {/* Login Page (Home page) */}
         <Route path="/" element={<WelcomePage />} />
