@@ -15,7 +15,7 @@ services:
           name: restaurant-reservation-db
           property: connectionString
       - key: CORS_ORIGINS
-        value: https://restaurant-reservation-frontend.onrender.com
+        value: https://restaurant-reservation-frontend-jjo6.onrender.com
 
   - type: web
     name: restaurant-reservation-frontend
