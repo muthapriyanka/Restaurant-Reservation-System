@@ -980,6 +980,19 @@ body {
   border: 1px solid #ccc;
   margin-top: 8px;
 }
+.app-header-actions {
+  position: fixed;
+  top: 12px;
+  right: 12px;
+  left: 12px;
+  z-index: 1000;
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
 .logout-fixed-wrapper {
   position: fixed;
   top: 12px;
@@ -988,7 +1001,7 @@ body {
 }
 
 .logout-fixed-btn {
-  padding: 10px 20px;
+  padding: 10px 16px;
   font-size: 0.95rem;
   background-color: #dc3545;
   color: white;
@@ -997,8 +1010,31 @@ body {
   cursor: pointer;
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
   transition: background-color 0.2s ease;
-  width: auto;              /* ✅ ensures it doesn't stretch */
-  display: inline-block;    /* ✅ keeps it inline, not block-level */
+  width: auto;
+  min-width: 96px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  white-space: nowrap;
+}
+
+.app-header-actions .logout-fixed-btn {
+  flex: 0 0 auto;
+}
+
+@media (max-width: 480px) {
+  .app-header-actions {
+    top: 8px;
+    right: 8px;
+    left: 8px;
+    gap: 8px;
+  }
+
+  .logout-fixed-btn {
+    min-width: 0;
+    padding: 9px 12px;
+    font-size: 0.85rem;
+  }
 }
 
 
@@ -1060,5 +1096,4 @@ body {
 .review-card strong {
   color: #ffd700; /* gold labels for rating/comment */
 }
-
 

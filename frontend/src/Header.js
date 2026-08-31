@@ -5,7 +5,7 @@ const Header = () => {
   const navigate = useNavigate();
 
   const handleLogout = () => {
-    localStorage.removeItem("token");
+    localStorage.removeItem("accessToken");
     localStorage.removeItem("role");
     navigate("/login");
   };
@@ -19,12 +19,11 @@ const Header = () => {
   };
 
   return (
-    <>
+    <div className="app-header-actions">
       {shouldShowAnalytics() ? (
         <button
-          className="logout-fixed-btn logout-fixed-wrapper"
+          className="logout-fixed-btn"
           onClick={() => navigate("/adminAnalytics")}
-          style={{ marginRight: "7%", width: "20%" }}
         >
           Admin Analytics
         </button>
@@ -34,9 +33,8 @@ const Header = () => {
 
       {shouldShowMyBookings() ? (
         <button
-          className="logout-fixed-btn logout-fixed-wrapper"
+          className="logout-fixed-btn"
           onClick={() => navigate("/my-bookings")}
-          style={{ marginRight: "7%", width: "9%" }}
         >
           My Bookings
         </button>
@@ -44,12 +42,10 @@ const Header = () => {
         ""
       )}
 
-      <div className="logout-fixed-wrapper">
-        <button className="logout-fixed-btn" onClick={handleLogout}>
-          Logout
-        </button>
-      </div>
-    </>
+      <button className="logout-fixed-btn" onClick={handleLogout}>
+        Logout
+      </button>
+    </div>
   );
 };
 
