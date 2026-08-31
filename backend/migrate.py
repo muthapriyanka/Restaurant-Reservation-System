@@ -1,6 +1,9 @@
+import os
+import time as time_module
 from datetime import datetime, time
 
 from passlib.context import CryptContext
+from sqlalchemy.exc import OperationalError
 
 from app.database import Base, SessionLocal, engine
 from app.schemas.OperatingHoursSchema import DayOfWeek
@@ -21,6 +24,24 @@ from app.models import (
 )
 
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
+
+
+def wait_for_database(max_attempts=30, delay_seconds=5):
+    for attempt in range(1, max_attempts + 1):
+        try:
+            with engine.connect():
+                print("Database connection ready.")
+                return
+        except OperationalError as exc:
+            if attempt == max_attempts:
+                print("Database connection failed after retries.")
+                raise
+
+            print(
+                "Database not ready "
+                f"(attempt {attempt}/{max_attempts}): {exc.orig}"
+            )
+            time_module.sleep(delay_seconds)
 
 
 DEMO_RESTAURANTS = [
@@ -217,6 +238,10 @@ def seed_demo_data():
 print("Dropping old tables...")
 # Base.metadata.drop_all(engine)  # Deletes existing tables
 print("Recreating tables...")
+wait_for_database(
+    max_attempts=int(os.getenv("DB_STARTUP_MAX_ATTEMPTS", "30")),
+    delay_seconds=int(os.getenv("DB_STARTUP_DELAY_SECONDS", "5")),
+)
 Base.metadata.create_all(engine)  # Creates new tables
 print("Tables successfully created!")
 seed_demo_data()
