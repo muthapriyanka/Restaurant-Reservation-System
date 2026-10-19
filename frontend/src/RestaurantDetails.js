@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Link, useSearchParams } from "react-router-dom";
 import { getRestaurantDetailForManager } from "./api/auth";
 import Header from "./Header";
+import { resolveMediaUrl } from "./media";
 import "./RestaurantDetails.css";
 
 const capitalize = (s) => (s ? s.charAt(0).toUpperCase() + s.slice(1) : "");
@@ -105,11 +106,13 @@ const RestaurantDetails = () => {
             <div className="review-card">
               <h3 className="card-title">Photos</h3>
               <div className="photos-grid">
-                {photos.map((url, i) => (
+                {photos.map((photo, i) => (
                   <img
-                    key={i}
-                    src={url}
-                    alt={`${name} ${i + 1}`}
+                    key={photo.photo_id || i}
+                    src={resolveMediaUrl(
+                      typeof photo === "string" ? photo : photo.url
+                    )}
+                    alt={photo.caption || `${name} ${i + 1}`}
                     className="restaurant-photo"
                   />
                 ))}

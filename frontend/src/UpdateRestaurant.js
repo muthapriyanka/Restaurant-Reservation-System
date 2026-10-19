@@ -4,6 +4,7 @@ import {
   getRestaurantDetailForManager,
   managerUpdateOperatingHours,
   managerUpdateTables,
+  managerUploadRestaurantPhoto,
   updateRestaurantForManager,
 } from "./api/auth";
 
@@ -33,6 +34,7 @@ const UpdateRestaurant = () => {
   const { id } = useParams();
   const navigate = useNavigate();
   const [restaurant, setRestaurant] = useState(null);
+  const [photo, setPhoto] = useState(null);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -134,10 +136,14 @@ const UpdateRestaurant = () => {
       }));
 
       // 3) Run follow-up updates in parallel
-      const [hrsRes, tblsRes] = await Promise.all([
+      const requests = [
         managerUpdateOperatingHours(rstId, operating_hours),
         managerUpdateTables(rstId, { tables: tablesPayload }),
-      ]);
+      ];
+      if (photo) {
+        requests.push(managerUploadRestaurantPhoto(rstId, photo));
+      }
+      const [hrsRes, tblsRes] = await Promise.all(requests);
 
       console.log("hours updated", hrsRes);
       console.log("tables updated", tblsRes);
@@ -388,6 +394,16 @@ const UpdateRestaurant = () => {
             </div>
 
             {/* Submit */}
+            <div className="form-group">
+              <label htmlFor="restaurant-photo">Add restaurant photo</label>
+              <input
+                id="restaurant-photo"
+                type="file"
+                accept="image/jpeg,image/png,image/webp"
+                onChange={(event) => setPhoto(event.target.files?.[0] || null)}
+              />
+            </div>
+
             <button type="submit" className="submit-button">
               Save
             </button>

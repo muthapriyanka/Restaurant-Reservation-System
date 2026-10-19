@@ -175,7 +175,7 @@ body {
   }
   
   .update-restaurant-bg {
-    background-image: url('https://images.pexels.com/photos/262047/pexels-photo-262047.jpeg?auto=compress&cs=tinysrgb&w=1600');
+    background-image: var(--image-restaurant-table);
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
@@ -220,7 +220,7 @@ body {
   }
   
   .analytics-bg {
-    background-image: url('https://images.pexels.com/photos/262047/pexels-photo-262047.jpeg?auto=compress&cs=tinysrgb&w=1600');
+    background-image: var(--image-restaurant-table);
     background-size: cover;
     background-position: center;
     background-attachment: fixed;
@@ -290,7 +290,7 @@ body {
   }
   
   .add-restaurant-bg {
-    background-image: url('https://images.pexels.com/photos/6267/menu-restaurant-vintage-table.jpg?auto=compress&cs=tinysrgb&w=1600');
+    background-image: var(--image-menu-table);
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
@@ -375,7 +375,7 @@ body {
   }
   
   .welcome-bg {
-    background-image: url('https://images.pexels.com/photos/262978/pexels-photo-262978.jpeg?auto=compress&cs=tinysrgb&w=1600');
+    background-image: var(--image-dining-room);
     background-size: cover;
     background-position: center;
     height: 100vh;
@@ -451,7 +451,7 @@ body {
   }
 
   .login-bg {
-    background-image: url('https://images.pexels.com/photos/2619967/pexels-photo-2619967.jpeg?auto=compress&cs=tinysrgb&w=1600');
+    background-image: var(--image-login-dining);
     background-size: cover;
     background-position: center;
     height: 100vh;
@@ -522,7 +522,7 @@ body {
   }
 
   .register-bg {
-    background-image: url('https://images.pexels.com/photos/2696064/pexels-photo-2696064.jpeg?auto=compress&cs=tinysrgb&w=1600');
+    background-image: var(--image-register-dining);
     background-size: cover;
     background-position: center;
     height: 100vh;
@@ -607,7 +607,7 @@ body {
   }
   
   .customer-bg {
-    background-image: url('https://images.pexels.com/photos/262918/pexels-photo-262918.jpeg?auto=compress&cs=tinysrgb&w=1600');
+    background-image: var(--image-customer-dining);
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
@@ -724,7 +724,7 @@ body {
   
 
   .book-bg {
-    background-image: url('https://images.pexels.com/photos/262918/pexels-photo-262918.jpeg?auto=compress&cs=tinysrgb&w=1600');
+    background-image: var(--image-customer-dining);
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
@@ -808,7 +808,7 @@ body {
   }
   
   .admin-dashboard-bg {
-    background-image: url('https://images.pexels.com/photos/262978/pexels-photo-262978.jpeg?auto=compress&cs=tinysrgb&w=1600');
+    background-image: var(--image-dining-room);
     background-size: cover;
     background-position: center;
     min-height: 100vh;
@@ -837,7 +837,7 @@ body {
   color: white;
 }
 .manager-dashboard-bg {
-  background-image: url('https://images.pexels.com/photos/262978/pexels-photo-262978.jpeg?auto=compress&cs=tinysrgb&w=1600'); /* Replace with your desired image URL */
+  background-image: var(--image-dining-room);
   background-size: cover; /* Ensure the image covers the entire viewport */
   background-position: center; /* Center the image */
   background-attachment: fixed; /* Keep the background fixed when scrolling */
@@ -877,7 +877,7 @@ body {
   box-sizing: border-box;
 }
 .customer-bookings {
-  background-image: url('https://images.pexels.com/photos/262918/pexels-photo-262918.jpeg?auto=compress&cs=tinysrgb&w=1600');
+  background-image: var(--image-customer-dining);
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
@@ -1040,7 +1040,7 @@ body {
 
 .read-reviews-bg {
   position: relative;
-  background-image: url('https://images.pexels.com/photos/6267/menu-restaurant-vintage-table.jpg?auto=compress&cs=tinysrgb&w=1600');
+  background-image: var(--image-menu-table);
   background-size: cover;
   background-position: center;
   min-height: 100vh;

@@ -18,6 +18,9 @@ class AuthMiddleware(BaseHTTPMiddleware):
         if request.url.path in ["/api/login", "/api/register", "/health"]:
             return await call_next(request)
 
+        if request.url.path.startswith("/api/media/"):
+            return await call_next(request)
+
         if request.method == "OPTIONS":
             return await call_next(request)
 

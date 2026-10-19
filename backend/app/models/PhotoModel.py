@@ -12,6 +12,7 @@ class RestaurantPhoto(Base):
         Integer, ForeignKey("restaurants.restaurant_id"), nullable=False
     )
     url = Column(String(255), nullable=False)
+    object_key = Column(String(512), nullable=True, unique=True)
     caption = Column(String(255))
     display_order = Column(Integer, default=0)
     uploaded_at = Column(DateTime, default=datetime.utcnow)

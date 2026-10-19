@@ -2,6 +2,7 @@ annotated-types==0.7.0
 anyio==4.8.0
 astroid==2.13.5
 bcrypt==4.2.1
+boto3==1.40.55
 black==23.1.0
 certifi==2025.1.31
 click==8.1.8
@@ -32,6 +33,7 @@ passlib==1.7.4
 pathspec==0.12.1
 platformdirs==4.3.7
 psycopg2-binary==2.9.10
+pytest==8.3.5
 pydantic==2.10.6
 pydantic-extra-types==2.10.2
 pydantic-settings==2.7.1

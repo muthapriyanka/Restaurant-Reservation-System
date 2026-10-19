@@ -22,6 +22,7 @@ class RestaurantPhotoUpdate(BaseModel):
 class RestaurantPhotoResponse(RestaurantPhotoBase):
     photo_id: int
     restaurant_id: int
+    object_key: Optional[str] = None
     uploaded_at: datetime
 
     class Config:

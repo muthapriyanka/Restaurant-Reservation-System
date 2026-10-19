@@ -1,8 +1,10 @@
 import os
 import time as time_module
+from contextlib import contextmanager
 from datetime import datetime, time
 
 from passlib.context import CryptContext
+from sqlalchemy import inspect, text
 from sqlalchemy.exc import OperationalError
 
 from app.database import Base, SessionLocal, engine
@@ -26,6 +28,21 @@ from app.models import (
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
 
+@contextmanager
+def migration_lock():
+    if engine.dialect.name != "postgresql":
+        yield
+        return
+
+    connection = engine.connect()
+    try:
+        connection.execute(text("SELECT pg_advisory_lock(82173491)"))
+        yield
+    finally:
+        connection.execute(text("SELECT pg_advisory_unlock(82173491)"))
+        connection.close()
+
+
 def wait_for_database(max_attempts=30, delay_seconds=5):
     for attempt in range(1, max_attempts + 1):
         try:
@@ -38,8 +55,7 @@ def wait_for_database(max_attempts=30, delay_seconds=5):
                 raise
 
             print(
-                "Database not ready "
-                f"(attempt {attempt}/{max_attempts}): {exc.orig}"
+                "Database not ready " f"(attempt {attempt}/{max_attempts}): {exc.orig}"
             )
             time_module.sleep(delay_seconds)
 
@@ -86,6 +102,12 @@ DEMO_RESTAURANTS = [
     },
 ]
 
+DEMO_RESTAURANT_PHOTOS = {
+    "Golden Gate Bistro": "app-assets/dining-room.jpeg",
+    "Saffron Table": "app-assets/menu-table.jpeg",
+    "Harbor Sushi": "app-assets/customer-dining.jpeg",
+}
+
 DEMO_AVAILABILITY = [
     "10:00",
     "10:30",
@@ -124,6 +146,25 @@ def get_or_create_user(db, email, role):
     return user
 
 
+def ensure_photo_object_key_column():
+    columns = {
+        column["name"] for column in inspect(engine).get_columns("restaurant_photos")
+    }
+    if "object_key" not in columns:
+        with engine.begin() as connection:
+            connection.execute(
+                text("ALTER TABLE restaurant_photos ADD COLUMN object_key VARCHAR(512)")
+            )
+    with engine.begin() as connection:
+        connection.execute(
+            text(
+                "CREATE UNIQUE INDEX IF NOT EXISTS "
+                "ix_restaurant_photos_object_key "
+                "ON restaurant_photos (object_key)"
+            )
+        )
+
+
 def seed_demo_data():
     db = SessionLocal()
     try:
@@ -135,8 +176,7 @@ def seed_demo_data():
         manager = (
             db.query(RestaurantManagerModel.RestaurantManager)
             .filter(
-                RestaurantManagerModel.RestaurantManager.user_id
-                == manager_user.user_id
+                RestaurantManagerModel.RestaurantManager.user_id == manager_user.user_id
             )
             .first()
         )
@@ -228,6 +268,23 @@ def seed_demo_data():
                     )
                 )
 
+            demo_object_key = DEMO_RESTAURANT_PHOTOS[restaurant.name]
+            demo_photo = (
+                db.query(PhotoModel.RestaurantPhoto)
+                .filter(PhotoModel.RestaurantPhoto.object_key == demo_object_key)
+                .first()
+            )
+            if not demo_photo:
+                db.add(
+                    PhotoModel.RestaurantPhoto(
+                        restaurant_id=restaurant.restaurant_id,
+                        url=f"/api/media/{demo_object_key}",
+                        object_key=demo_object_key,
+                        caption=f"{restaurant.name} dining experience",
+                        display_order=0,
+                    )
+                )
+
             db.commit()
 
         print("Demo data seeded successfully!")
@@ -235,13 +292,17 @@ def seed_demo_data():
         db.close()
 
 
-print("Dropping old tables...")
-# Base.metadata.drop_all(engine)  # Deletes existing tables
-print("Recreating tables...")
 wait_for_database(
     max_attempts=int(os.getenv("DB_STARTUP_MAX_ATTEMPTS", "30")),
     delay_seconds=int(os.getenv("DB_STARTUP_DELAY_SECONDS", "5")),
 )
-Base.metadata.create_all(engine)  # Creates new tables
-print("Tables successfully created!")
-seed_demo_data()
+with migration_lock():
+    print("Creating or updating tables...")
+    Base.metadata.create_all(engine)
+    ensure_photo_object_key_column()
+    ReservationModel.CONFIRMED_RESERVATION_UNIQUE_INDEX.create(
+        bind=engine,
+        checkfirst=True,
+    )
+    print("Tables successfully created!")
+    seed_demo_data()

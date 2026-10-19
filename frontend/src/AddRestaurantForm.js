@@ -7,6 +7,7 @@ import {
   managerAddOperatingHours,
   managerAddRestaurant,
   managerAddTables,
+  managerUploadRestaurantPhoto,
 } from "./api/auth";
 
 // Constants
@@ -95,9 +96,9 @@ export default function AddRestaurantForm() {
 
   const onSubmit = async (data) => {
     try {
-      const { operating_hours, tables: tbls, ...basic } = data;
+      const { operating_hours, tables: tbls, photo, ...basic } = data;
       const { restaurant_id } = await managerAddRestaurant(basic);
-      await Promise.all([
+      const followUpRequests = [
         managerAddOperatingHours(restaurant_id, operating_hours),
         managerAddTables(restaurant_id, {
           tables: tbls.map(({ table_number, capacity }) => ({
@@ -106,7 +107,13 @@ export default function AddRestaurantForm() {
             is_active: true,
           })),
         }),
-      ]);
+      ];
+      if (photo?.[0]) {
+        followUpRequests.push(
+          managerUploadRestaurantPhoto(restaurant_id, photo[0])
+        );
+      }
+      await Promise.all(followUpRequests);
       alert("Restaurant submitted successfully!");
       navigate("/managerDashboard");
     } catch {
@@ -266,6 +273,16 @@ export default function AddRestaurantForm() {
             + Add Table
           </button>
         </fieldset>
+
+        <div className="form-group">
+          <label htmlFor="restaurant-photo">Restaurant photo</label>
+          <input
+            id="restaurant-photo"
+            type="file"
+            accept="image/jpeg,image/png,image/webp"
+            {...register("photo")}
+          />
+        </div>
 
         <button type="submit" disabled={isSubmitting}>
           {isSubmitting ? "Submitting…" : "Add Restaurant"}

@@ -2,11 +2,13 @@
 
 /* Container background */
 .read-reviews-bg {
-    /* Random cozy interior from Picsum */
-    background: url("https://picsum.photos/id/1067/1600/900") center/cover no-repeat;
+    background-image: var(--image-restaurant-details);
+    background-position: center;
+    background-size: cover;
+    background-repeat: no-repeat;
     padding: 2rem 0;
   }
-  
+
   /* Center & constrain content */
   .read-reviews-container {
     max-width: 800px;
@@ -105,4 +107,4 @@
   .error {
     color: #f55;
   }
-  
+

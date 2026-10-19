@@ -6,6 +6,7 @@ from app.routes.email import send_email_notification  # Import your email functi
 
 
 from fastapi import APIRouter, Depends, HTTPException, Request, Response, status
+from sqlalchemy.exc import IntegrityError
 from sqlalchemy.orm import Session
 
 from app import database
@@ -22,6 +23,19 @@ from app.schemas import ReservationSchema
 from app.schemas.ReservationSlotSchema import ReservationSlotResponse
 
 router = APIRouter()
+
+BOOKING_CONFLICT_INDEX = "uq_reservations_confirmed_table_time"
+
+
+def _is_booking_conflict(error: IntegrityError) -> bool:
+    constraint_name = getattr(
+        getattr(error.orig, "diag", None), "constraint_name", None
+    )
+    error_message = str(error.orig).lower()
+    return constraint_name == BOOKING_CONFLICT_INDEX or (
+        "reservations.table_id" in error_message
+        and "reservations.reservation_time" in error_message
+    )
 
 
 @router.post(
@@ -50,22 +64,38 @@ async def book_table(
     if not customer:
         raise HTTPException(404, "Customer record not found")
 
-    # 2) Verify the Table is valid and active
+    # Lock the physical table so competing bookings for it are serialized.
     table = (
         db.query(TableModel.Table)
         .filter(
             TableModel.Table.table_id == reservation.table_id,
             TableModel.Table.restaurant_id == reservation.restaurant_id,
         )
+        .with_for_update()
         .first()
     )
     if not table or not table.is_active:
         raise HTTPException(404, "Table not available for reservations")
+    if reservation.party_size > table.capacity:
+        raise HTTPException(400, "Party size exceeds table capacity")
 
-    # If the table is found, deactivate it to prevent double booking
-    table.is_active = False
-    db.add(table)
-
+    conflict = (
+        db.query(ReservationModel.Reservation)
+        .filter(
+            ReservationModel.Reservation.table_id == reservation.table_id,
+            ReservationModel.Reservation.reservation_time
+            == reservation.reservation_time,
+            ReservationModel.Reservation.status
+            == ReservationModel.ReservationStatus.CONFIRMED,
+        )
+        .first()
+    )
+    if conflict:
+        db.rollback()
+        raise HTTPException(
+            status_code=status.HTTP_409_CONFLICT,
+            detail="This table is already reserved for the selected time",
+        )
 
     # 5) Generate a confirmation code
     confirmation_code = "".join(
@@ -79,12 +109,22 @@ async def book_table(
         table_id=reservation.table_id,
         reservation_time=reservation.reservation_time,
         party_size=reservation.party_size,
+        status=ReservationModel.ReservationStatus.CONFIRMED,
         special_requests=reservation.special_requests,
         confirmation_code=confirmation_code,
     )
     db.add(new_reservation)
 
-    db.commit()
+    try:
+        db.commit()
+    except IntegrityError as error:
+        db.rollback()
+        if _is_booking_conflict(error):
+            raise HTTPException(
+                status_code=status.HTTP_409_CONFLICT,
+                detail="This table was just reserved by another customer",
+            ) from error
+        raise
     db.refresh(new_reservation)
 
     # Get restaurant name for the response
@@ -93,14 +133,14 @@ async def book_table(
         .filter(RestaurantModel.Restaurant.restaurant_id == reservation.restaurant_id)
         .first()
     )
-    
+
     # Create response with restaurant name
     response_dict = {
         **new_reservation.__dict__,
-        "restaurant_name": restaurant.name if restaurant else None
+        "restaurant_name": restaurant.name if restaurant else None,
     }
 
-       # --- EMAIL NOTIFICATION LOGIC STARTS HERE ---
+    # --- EMAIL NOTIFICATION LOGIC STARTS HERE ---
     # Get user info (email, name)
     user_obj = (
         db.query(CustomerModel.Customer)
@@ -208,7 +248,8 @@ async def list_reservations(
         db.query(ReservationModel.Reservation, RestaurantModel.Restaurant.name)
         .join(
             RestaurantModel.Restaurant,
-            ReservationModel.Reservation.restaurant_id == RestaurantModel.Restaurant.restaurant_id
+            ReservationModel.Reservation.restaurant_id
+            == RestaurantModel.Restaurant.restaurant_id,
         )
         .filter(ReservationModel.Reservation.customer_id == customer.customer_id)
         .order_by(ReservationModel.Reservation.reservation_time)
@@ -218,10 +259,7 @@ async def list_reservations(
     # Transform the results to include restaurant name
     result = []
     for reservation, restaurant_name in reservations:
-        reservation_dict = {
-            **reservation.__dict__,
-            "restaurant_name": restaurant_name
-        }
+        reservation_dict = {**reservation.__dict__, "restaurant_name": restaurant_name}
         result.append(reservation_dict)
 
     return result
@@ -316,6 +354,7 @@ async def update_reservation(
             TableModel.Table.table_id == new_table_id,
             TableModel.Table.restaurant_id == reservation.restaurant_id,
         )
+        .with_for_update()
         .first()
     )
     if not table or not table.is_active:
@@ -335,6 +374,24 @@ async def update_reservation(
     if not slot or slot.available_tables < 1:
         raise HTTPException(400, "No available tables at this time slot")
 
+    conflict = (
+        db.query(ReservationModel.Reservation)
+        .filter(
+            ReservationModel.Reservation.reservation_id != reservation_id,
+            ReservationModel.Reservation.table_id == new_table_id,
+            ReservationModel.Reservation.reservation_time == new_time,
+            ReservationModel.Reservation.status
+            == ReservationModel.ReservationStatus.CONFIRMED,
+        )
+        .first()
+    )
+    if conflict:
+        db.rollback()
+        raise HTTPException(
+            status_code=status.HTTP_409_CONFLICT,
+            detail="This table is already reserved for the selected time",
+        )
+
     # 5c) Decrement the slot's counter (and deactivate if zero)
     slot.available_tables -= 1
     if slot.available_tables == 0:
@@ -345,7 +402,16 @@ async def update_reservation(
     for field, value in update_data.dict(exclude_unset=True).items():
         setattr(reservation, field, value)
 
-    db.commit()
+    try:
+        db.commit()
+    except IntegrityError as error:
+        db.rollback()
+        if _is_booking_conflict(error):
+            raise HTTPException(
+                status_code=status.HTTP_409_CONFLICT,
+                detail="This table was just reserved by another customer",
+            ) from error
+        raise
     db.refresh(reservation)
     return reservation
 
@@ -394,21 +460,7 @@ async def cancel_reservation(
     # 5) Update status to CANCELLED
     reservation.status = ReservationModel.ReservationStatus.CANCELLED
 
-    # 6) Reactivate the table
-    table = (
-        db.query(TableModel.Table)
-        .filter(
-            TableModel.Table.table_id == reservation.table_id,
-            TableModel.Table.restaurant_id == reservation.restaurant_id,
-        )
-        .first()
-    )
-    if table:
-        table.is_active = True
-        db.add(table)
-
-
-    # 8) Commit all changes
+    # The table remains enabled; only its confirmed reservation/time is blocked.
     db.commit()
 
     # 9) Return no content

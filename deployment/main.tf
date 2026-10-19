@@ -1,46 +1,32 @@
 terraform {
+  required_version = ">= 1.5.0"
+
   required_providers {
     aws = {
       source  = "hashicorp/aws"
-      version = "~> 4.16"
+      version = "~> 5.0"
+    }
+  }
+
+  backend "s3" {}
+}
+
+provider "aws" {
+  region = var.aws_region
+
+  default_tags {
+    tags = {
+      Project   = var.project_name
+      ManagedBy = "Terraform"
     }
   }
 }
 
-provider "aws" {
-  region  = "us-west-1"
+data "aws_caller_identity" "current" {}
+data "aws_availability_zones" "available" {
+  state = "available"
 }
 
-resource "tls_private_key" "key" {
-  algorithm = "RSA"
-  rsa_bits  = 4096
-}
-
-resource "aws_key_pair" "key_pair" {
-  key_name   = "key"
-  public_key = tls_private_key.key.public_key_openssh
-
-  provisioner "local-exec" {
-    command = "echo '${tls_private_key.key.private_key_pem}' > ${path.module}/key.pem && chmod 0700 ${path.module}/key.pem"
-  }
-}
-
-resource "aws_instance" "app_server" {
-  ami           = "ami-0d53d72369335a9d6"  # Ubuntu 22.04 free tier ami in us-west-1
-  instance_type = "t2.large"
-  key_name      = aws_key_pair.key_pair.key_name
-  subnet_id     = aws_subnet.public.id
-  
-  vpc_security_group_ids = [aws_security_group.allow_ssh_http.id]
-
-  user_data = file("${path.module}/install_apache.sh")
-}
-
-# Create Elastic IP
-resource "aws_eip" "app_server_eip" {
-  instance = aws_instance.app_server.id
-}
-
-output "instance" {
-  value = aws_eip.app_server_eip.public_ip
+data "aws_ssm_parameter" "amazon_linux_2023" {
+  name = "/aws/service/ami-amazon-linux-latest/al2023-ami-kernel-default-x86_64"
 }

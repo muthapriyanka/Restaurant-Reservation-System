@@ -10,3 +10,8 @@ frontend/build/
 .env
 .env.*
 !.env.example
+
+deployment/key.pem
+deployment/terraform.tfstate*
+deployment/.terraform/
+deployment/*.tfplan

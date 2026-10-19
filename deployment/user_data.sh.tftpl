@@ -1,0 +1,57 @@
+#!/bin/bash
+set -euo pipefail
+
+exec > >(tee /var/log/restaurant-reservation-bootstrap.log | logger -t user-data -s 2>/dev/console) 2>&1
+
+dnf update -y
+dnf install -y docker awscli
+systemctl enable --now docker
+
+aws ecr get-login-password --region ${aws_region} | docker login --username AWS --password-stdin "$(echo '${backend_image}' | cut -d/ -f1)"
+
+APP_SECRET_JSON=$(aws secretsmanager get-secret-value \
+  --region ${aws_region} \
+  --secret-id '${secret_id}' \
+  --query SecretString \
+  --output text)
+DB_SECRET_JSON=$(aws secretsmanager get-secret-value \
+  --region ${aws_region} \
+  --secret-id '${db_secret_arn}' \
+  --query SecretString \
+  --output text)
+SECRET_KEY=$(python3 -c 'import json,sys; print(json.load(sys.stdin)["SECRET_KEY"])' <<< "$APP_SECRET_JSON")
+DATABASE_URL=$(python3 -c 'import json,sys,urllib.parse; s=json.load(sys.stdin); print("postgresql://%s:%s@%s:%s/${db_name}" % (urllib.parse.quote(s["username"], safe=""), urllib.parse.quote(s["password"], safe=""), s["host"], s["port"]))' <<< "$DB_SECRET_JSON")
+
+docker pull '${backend_image}'
+docker pull '${frontend_image}'
+docker network create restaurant-network || true
+docker rm -f frontend backend 2>/dev/null || true
+
+docker run -d \
+  --name backend \
+  --network restaurant-network \
+  --restart unless-stopped \
+  -e DATABASE_URL="$DATABASE_URL" \
+  -e SECRET_KEY="$SECRET_KEY" \
+  -e AWS_REGION='${aws_region}' \
+  -e S3_BUCKET='${s3_bucket}' \
+  -e MAX_IMAGE_SIZE_MB=5 \
+  '${backend_image}'
+
+for attempt in $(seq 1 60); do
+  if docker exec backend curl --fail --silent http://127.0.0.1:8000/health >/dev/null; then
+    break
+  fi
+  if [ "$attempt" -eq 60 ]; then
+    docker logs backend
+    exit 1
+  fi
+  sleep 5
+done
+
+docker run -d \
+  --name frontend \
+  --network restaurant-network \
+  --restart unless-stopped \
+  -p 80:80 \
+  '${frontend_image}'

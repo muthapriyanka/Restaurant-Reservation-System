@@ -1,58 +1,116 @@
- resource "aws_launch_template" "example" {
-   name_prefix   = "example"
-   image_id      =  "ami-0d53d72369335a9d6" 
-   instance_type = "t2.micro"
-   user_data     = base64encode(<<-EOF
-                  #!/bin/bash
-                  sudo apt-get update
-                  sudo apt-get install -y apache2
-                  systmctl start apache2
-                  systmctl enable apache2
-                  echo "<h1> Welcome to my instance </h1>"> /var/www/html/index.html
-                  mkdir -p /home/ubuntu/.ssh
-                  echo "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAACAQDPRf6XX1ZpZ9bMPqx+NyXPkxP2c6EkG3/iIp9aAdhFh3XNQaDltJd8EwU7njteOlcpWS8ZV0CViC57NM7tPzrkpmOr6JvAUxV2Vv4V4/hCgLVOLkdidVITxofAQid1veSx21iG9jrHuh4S7QSohwirihjV9FB49c2XIsPJkrwAnFGUybsV7mtGXgEXLkFaOWp/ft8KXKElwL4Lb4F7Mxj0LiuKTVL11WAR19Ectker2WcZxmET1dTi0x80csFjG6QtQtY/Cxfkwl2oIvwyk+TcWogZOnPshTfoy4QhDSP5pPn3O6NE2wTTQwI5XpQWlaHVLBm2T5BRg8ZSW5kAvtlZApJzUj9VHrrAk3oZ72dYi7wyclc+7RAWt+wecvO+XQYTxXNexRZQX/jBLpKM3V7vDfgcJjGSl+Jx2q7z4WQ6oMctw3itr8tgciKjnWGXLKWL9bTiw7yysEaJPuQStpUTckT/E9odvcrj/RBq+yGf+cJWxnIUQbE7TJWyA/EtOdR/tL9Y7YAeaFYy7Bd5/VZMF0i1AImapf8dKi9f57MUkesKV8O1HOOJv1mzSTMnhXWEMtGs4ZGo2AB65eruYElR8cS+aTOL+mbh5t9UFho6Zzt/M6WtfB0CVULLs8HvDebU33p0agBtMPqg6n46gQtUhss/rk9IlsepqaTRnxJ9DQ==" >> /home/ubuntu/.ssh
-                  chown -R ubuntu:ubuntu /home/ubuntu/.ssh
-                  chmod 700 /home/ubuntu/.ssh
-                  chmod 600 /home/ubuntu/.ssh/authorised_keys
-                  EOF
-                )
-   vpc_security_group_ids = [aws_security_group.allow_ssh_http.id]
- }
+resource "aws_lb" "app" {
+  name               = "${var.project_name}-alb"
+  internal           = false
+  load_balancer_type = "application"
+  security_groups    = [aws_security_group.load_balancer.id]
+  subnets            = [for subnet in aws_subnet.public : subnet.id]
+}
 
- resource "aws_autoscaling_group" "example" {
-   vpc_zone_identifier = [aws_subnet.public.id]
-   desired_capacity   = 2
-   max_size           = 5
-   min_size           = 1
- 
-   load_balancers = [aws_elb.example.name]
-   launch_template {
-     id      = aws_launch_template.example.id
-     version = "$Latest"
-   }
- }
+resource "aws_lb_target_group" "app" {
+  name     = "${var.project_name}-tg"
+  port     = 80
+  protocol = "HTTP"
+  vpc_id   = aws_vpc.app.id
 
- #Create a new load balancer
- resource "aws_elb" "example" {
-   
-   name               = "example-elb"
-   subnets            = [aws_subnet.public.id]
-   security_groups    = [aws_security_group.allow_ssh_http.id]
+  health_check {
+    enabled             = true
+    path                = "/health"
+    healthy_threshold   = 2
+    unhealthy_threshold = 3
+    interval            = 30
+    timeout             = 5
+    matcher             = "200"
+  }
+}
 
-   health_check {
-     healthy_threshold   = 3 # How many times the health check needs to succeed to be considered healthy
-     unhealthy_threshold = 3 # How times the healthcheck needs to fail to mark the instance unhealthy and stop serving it traffic
-     timeout             = 5 # how long to wait for the instance to respond to the health check in seconds
-     target              = "HTTP:80/index.html" # What protocol, port, and path to test
-     interval            = 30 # how often instances are probed in seconds
-   }
-  
-   listener {
-     instance_port     = 80 # What port the instances are listening on
-     instance_protocol =  "HTTP"# What protocol the instances are using to serve traffic
-     lb_port           = 80 # What port the load balancer is listening on
-     lb_protocol       =  "HTTP"# What protocol the load balancer is using to serve traffic
-   }
-     #security_groups = [aws_security_group.allow_ssh.id]
- }
+resource "aws_lb_listener" "http" {
+  load_balancer_arn = aws_lb.app.arn
+  port              = 80
+  protocol          = "HTTP"
 
+  default_action {
+    type             = "forward"
+    target_group_arn = aws_lb_target_group.app.arn
+  }
+}
+
+resource "aws_launch_template" "app" {
+  name_prefix   = "${var.project_name}-"
+  image_id      = data.aws_ssm_parameter.amazon_linux_2023.value
+  instance_type = var.instance_type
+
+  iam_instance_profile {
+    name = aws_iam_instance_profile.app.name
+  }
+
+  vpc_security_group_ids = [aws_security_group.app.id]
+
+  user_data = base64encode(templatefile("${path.module}/user_data.sh.tftpl", {
+    aws_region     = var.aws_region
+    backend_image  = "${aws_ecr_repository.backend.repository_url}:${var.image_tag}"
+    frontend_image = "${aws_ecr_repository.frontend.repository_url}:${var.image_tag}"
+    secret_id      = aws_secretsmanager_secret.app.name
+    db_secret_arn  = aws_db_instance.app.master_user_secret[0].secret_arn
+    db_name        = aws_db_instance.app.db_name
+    s3_bucket      = aws_s3_bucket.images.id
+  }))
+
+  metadata_options {
+    http_endpoint = "enabled"
+    http_tokens   = "required"
+  }
+
+  tag_specifications {
+    resource_type = "instance"
+    tags          = { Name = "${var.project_name}-app" }
+  }
+
+  lifecycle {
+    create_before_destroy = true
+  }
+}
+
+resource "aws_autoscaling_group" "app" {
+  name                      = "${var.project_name}-asg"
+  min_size                  = var.min_size
+  desired_capacity          = var.desired_capacity
+  max_size                  = var.max_size
+  vpc_zone_identifier       = [for subnet in aws_subnet.public : subnet.id]
+  target_group_arns         = [aws_lb_target_group.app.arn]
+  health_check_type         = "ELB"
+  health_check_grace_period = 300
+
+  launch_template {
+    id      = aws_launch_template.app.id
+    version = aws_launch_template.app.latest_version
+  }
+
+  instance_refresh {
+    strategy = "Rolling"
+    preferences {
+      min_healthy_percentage = 50
+      instance_warmup        = 180
+      auto_rollback          = true
+    }
+    triggers = ["tag"]
+  }
+
+  tag {
+    key                 = "Name"
+    value               = "${var.project_name}-app"
+    propagate_at_launch = true
+  }
+}
+
+resource "aws_autoscaling_policy" "cpu_target" {
+  name                   = "${var.project_name}-cpu-target"
+  autoscaling_group_name = aws_autoscaling_group.app.name
+  policy_type            = "TargetTrackingScaling"
+
+  target_tracking_configuration {
+    predefined_metric_specification {
+      predefined_metric_type = "ASGAverageCPUUtilization"
+    }
+    target_value = 60
+  }
+}

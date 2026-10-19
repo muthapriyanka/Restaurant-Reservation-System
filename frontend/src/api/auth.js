@@ -64,6 +64,17 @@ export const managerAddRestaurant = async (data) => {
   }
 };
 
+export const managerUploadRestaurantPhoto = async (restaurantId, image) => {
+  const formData = new FormData();
+  formData.append("image", image);
+  formData.append("caption", image.name);
+  const response = await API.post(
+    `/manager/restaurants/${restaurantId}/photos/upload`,
+    formData
+  );
+  return response.data;
+};
+
 export const managerAddOperatingHours = async (restaurantId, data) => {
   try {
     // Transform the data to match the expected format
