@@ -20,7 +20,7 @@ DB_SECRET_JSON=$(aws secretsmanager get-secret-value \
   --query SecretString \
   --output text)
 SECRET_KEY=$(python3 -c 'import json,sys; print(json.load(sys.stdin)["SECRET_KEY"])' <<< "$APP_SECRET_JSON")
-DATABASE_URL=$(python3 -c 'import json,sys,urllib.parse; s=json.load(sys.stdin); print("postgresql://%s:%s@%s:%s/${db_name}" % (urllib.parse.quote(s["username"], safe=""), urllib.parse.quote(s["password"], safe=""), s["host"], s["port"]))' <<< "$DB_SECRET_JSON")
+DATABASE_URL=$(python3 -c 'import json,sys,urllib.parse; s=json.load(sys.stdin); print("postgresql://%s:%s@${db_host}:${db_port}/${db_name}" % (urllib.parse.quote(s["username"], safe=""), urllib.parse.quote(s["password"], safe="")))' <<< "$DB_SECRET_JSON")
 
 docker pull '${backend_image}'
 docker pull '${frontend_image}'

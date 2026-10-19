@@ -51,6 +51,8 @@ resource "aws_launch_template" "app" {
     frontend_image = "${aws_ecr_repository.frontend.repository_url}:${var.image_tag}"
     secret_id      = aws_secretsmanager_secret.app.name
     db_secret_arn  = aws_db_instance.app.master_user_secret[0].secret_arn
+    db_host        = aws_db_instance.app.address
+    db_port        = aws_db_instance.app.port
     db_name        = aws_db_instance.app.db_name
     s3_bucket      = aws_s3_bucket.images.id
   }))
