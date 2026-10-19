@@ -14,8 +14,12 @@ services:
         fromDatabase:
           name: restaurant-reservation-db
           property: connectionString
+      - key: SECRET_KEY
+        generateValue: true
       - key: CORS_ORIGINS
-        value: https://restaurant-reservation-frontend-jjo6.onrender.com
+        value: http://localhost:3000,http://127.0.0.1:3000,https://restaurant-reservation-frontend-jjo6.onrender.com
+      - key: CORS_ORIGIN_REGEX
+        value: '^https://[a-zA-Z0-9-]+\.vercel\.app$'
 
   - type: web
     name: restaurant-reservation-frontend

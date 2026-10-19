@@ -29,20 +29,15 @@ def get_cors_origins():
     return [origin.strip() for origin in origins.split(",") if origin.strip()]
 
 
+def get_cors_origin_regex():
+    return os.getenv("CORS_ORIGIN_REGEX") or None
+
+
 app = FastAPI(
     title="FastAPI Backend",
     docs_url="/docs",
 )
 
-app.add_middleware(
-    CORSMiddleware,
-    allow_origins=get_cors_origins(),
-    allow_credentials=True,
-    allow_methods=["GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"],
-    allow_headers=["*"],
-    expose_headers=["*"],
-    max_age=3600,
-)
 app.add_middleware(AuthMiddleware)
 
 
@@ -60,6 +55,19 @@ app.include_router(customerreviews.router, prefix="/api", tags=["Customer Review
 app.include_router(reservation.router, prefix="/api", tags=["Reservations"])
 app.include_router(photos.router, prefix="/api", tags=["Photos"])
 app.include_router(email.router, prefix="/api", tags=["email"])
+
+# Keep CORS outside FastAPI's error middleware so error responses also include
+# the browser-visible CORS headers.
+app = CORSMiddleware(
+    app=app,
+    allow_origins=get_cors_origins(),
+    allow_origin_regex=get_cors_origin_regex(),
+    allow_credentials=True,
+    allow_methods=["GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"],
+    allow_headers=["*"],
+    expose_headers=["*"],
+    max_age=3600,
+)
 
 if __name__ == "__main__":
     import uvicorn

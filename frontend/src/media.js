@@ -1,8 +1,7 @@
-const configuredApiBase =
-  process.env.REACT_APP_API_BASE_URL || "http://3.101.252.93:8000/api";
+import { API_BASE_URL } from "./config";
 
-const apiOrigin = configuredApiBase.startsWith("http")
-  ? new URL(configuredApiBase).origin
+const apiOrigin = API_BASE_URL.startsWith("http")
+  ? new URL(API_BASE_URL).origin
   : "";
 
 export const resolveMediaUrl = (path) => {

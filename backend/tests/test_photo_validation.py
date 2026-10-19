@@ -32,6 +32,17 @@ class PhotoValidationTest(unittest.TestCase):
 
         self.assertEqual(error.exception.status_code, 404)
 
+    def test_finds_bundled_demo_asset(self):
+        asset_path = photos._bundled_asset_path("app-assets/dining-room.jpeg")
+
+        self.assertIsNotNone(asset_path)
+        self.assertEqual(asset_path.name, "dining-room.jpeg")
+
+    def test_bundled_asset_rejects_nested_path(self):
+        self.assertIsNone(
+            photos._bundled_asset_path("app-assets/nested/dining-room.jpeg")
+        )
+
 
 if __name__ == "__main__":
     unittest.main()

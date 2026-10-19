@@ -14,7 +14,7 @@ from fastapi import (
     UploadFile,
     status,
 )
-from fastapi.responses import StreamingResponse
+from fastapi.responses import FileResponse, StreamingResponse
 from sqlalchemy.orm import Session
 
 from app import database
@@ -33,6 +33,20 @@ ALLOWED_IMAGE_TYPES = {
     "image/png": ".png",
     "image/webp": ".webp",
 }
+BUNDLED_ASSET_DIR = Path(__file__).resolve().parents[3] / "deployment" / "assets"
+
+
+def _bundled_asset_path(object_key: str) -> Path | None:
+    prefix = "app-assets/"
+    if not object_key.startswith(prefix):
+        return None
+
+    filename = object_key.removeprefix(prefix)
+    if not filename or "/" in filename or "\\" in filename:
+        return None
+
+    asset_path = BUNDLED_ASSET_DIR / filename
+    return asset_path if asset_path.is_file() else None
 
 
 def _matches_declared_image_type(contents: bytes, content_type: str) -> bool:
@@ -55,6 +69,16 @@ def read_media(object_key: str):
         raise HTTPException(status_code=400, detail="Invalid media key")
     if not object_key.startswith(("app-assets/", "restaurants/")):
         raise HTTPException(status_code=404, detail="Image not found")
+
+    bundled_asset = _bundled_asset_path(object_key)
+    if bundled_asset:
+        return FileResponse(
+            bundled_asset,
+            headers={
+                "Cache-Control": "public, max-age=86400",
+                "X-Content-Type-Options": "nosniff",
+            },
+        )
 
     try:
         stored_object = s3_storage.get_object(object_key)
