@@ -4,9 +4,9 @@
 
 ## 📝 Project Overview
 A multi-role (Customer, BusinessOwner, Admin) booking system built with:
-- **Backend**: FastAPI + MySQL  
+- **Backend**: FastAPI + PostgreSQL  
 - **Frontend**: ReactJS  
-- **Hosting**: AWS, GCP(For Database)  
+- **Hosting**: AWS
 
 ---
 
@@ -28,14 +28,12 @@ A multi-role (Customer, BusinessOwner, Admin) booking system built with:
   - Monitor usage analytics  
   - Manage users & listings  
 
+<img width="1512" height="877" alt="Screenshot 2026-10-19 at 11 44 23 AM" src="https://github.com/user-attachments/assets/2b0f6943-8f8d-4725-8e71-fd0a5a306ff8" />
 
-  <img width="1134" height="825" alt="Screenshot 2025-05-12 at 11 19 28 AM" src="https://github.com/user-attachments/assets/056de593-6fbf-414c-aca2-350f5c61bbe0" />
+<img width="1512" height="877" alt="Screenshot 2026-10-19 at 11 45 04 AM" src="https://github.com/user-attachments/assets/97c07dec-8fc2-4b58-a2e7-164229490802" />
 
-  
 
-  <img width="1457" height="821" alt="Screenshot 2025-05-12 at 11 46 18 AM" src="https://github.com/user-attachments/assets/9ce745ea-fe8c-467b-ad24-1671a6bfc731" />
-
-  <img width="1457" height="854" alt="Screenshot 2025-05-12 at 11 47 53 AM" src="https://github.com/user-attachments/assets/bf379f0b-c3c2-4bad-a349-5964507743b2" />
+ 
 
   
 
